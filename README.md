@@ -23,7 +23,7 @@ The tool prioritizes legal and safe defaults, including HTTPS-only requests, hon
 
 ### Pre-built Binaries
 
-Download the latest release from the [releases page](https://github.com/bountytxt/bountytxt/releases).
+Download the latest release from the [releases page](https://github.com/VictorStaflin/bountytxt-cli/releases/tag/v1.0.0).
 
 ### From Source
 
