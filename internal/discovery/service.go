@@ -97,7 +97,7 @@ func (s *Service) Discover(ctx context.Context, domain string) (*core.DiscoveryR
 // DiscoverBulk discovers security.txt for multiple domains
 func (s *Service) DiscoverBulk(ctx context.Context, domains []string, options core.BulkOptions) ([]*core.DiscoveryResult, error) {
 	results := make([]*core.DiscoveryResult, 0, len(domains))
-	
+
 	// Create worker pool
 	workers := options.Workers
 	if workers <= 0 {
@@ -181,7 +181,7 @@ func (s *Service) parseSecurityTxt(content string) (*core.SecurityTxt, error) {
 	lines := strings.Split(content, "\n")
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
-		
+
 		// Skip empty lines and comments
 		if line == "" || strings.HasPrefix(line, "#") {
 			continue

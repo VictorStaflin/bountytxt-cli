@@ -139,17 +139,17 @@ func outputProgramsYAML(programs []*bounty.Program) error {
 func outputProgramsTable(programs []*bounty.Program) error {
 	fmt.Printf("Found %d bug bounty programs:\n", len(programs))
 	fmt.Println(strings.Repeat("=", 80))
-	
+
 	for i, program := range programs {
 		fmt.Printf("\n%d. %s (%s)\n", i+1, program.Name, program.Domain)
 		fmt.Println(strings.Repeat("-", 40))
-		
+
 		// Basic information
 		fmt.Printf("Platform: %s\n", program.Platform)
 		fmt.Printf("Status: %s\n", program.Status)
 		fmt.Printf("Type: %s\n", program.Type)
 		fmt.Printf("Industry: %s\n", program.Industry)
-		
+
 		if program.URL != "" {
 			fmt.Printf("URL: %s\n", program.URL)
 		}
@@ -157,7 +157,7 @@ func outputProgramsTable(programs []*bounty.Program) error {
 		// Reward information if requested
 		if showRewardsInfo {
 			if program.RewardRange.HasBounties {
-				fmt.Printf("Rewards: %s%d - %s%d (%s)\n", 
+				fmt.Printf("Rewards: %s%d - %s%d (%s)\n",
 					program.RewardRange.Currency, program.RewardRange.Minimum,
 					program.RewardRange.Currency, program.RewardRange.Maximum,
 					program.RewardRange.Type)
@@ -198,7 +198,7 @@ func outputProgramsTable(programs []*bounty.Program) error {
 
 	fmt.Println(strings.Repeat("=", 80))
 	fmt.Printf("\nTotal: %d programs found\n", len(programs))
-	
+
 	if len(programs) == limitResults {
 		fmt.Printf("Note: Results limited to %d programs. Use --limit to see more.\n", limitResults)
 	}

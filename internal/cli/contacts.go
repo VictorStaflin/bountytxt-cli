@@ -45,7 +45,7 @@ func init() {
 
 func runContacts(cmd *cobra.Command, args []string) error {
 	domain := args[0]
-	
+
 	// Get flag values
 	validateContacts, _ := cmd.Flags().GetBool("validate-contacts")
 	preferEmail, _ := cmd.Flags().GetBool("prefer-email")
@@ -139,11 +139,11 @@ type ContactInfo struct {
 // extractContactsFromSecurityTxt extracts and categorizes contact information from SecurityTxt struct
 func extractContactsFromSecurityTxt(securityTxt *core.SecurityTxt, filterTypes []string, preferEmail bool) []ContactInfo {
 	contacts := make([]ContactInfo, 0)
-	
+
 	// Use the structured Contact field from SecurityTxt
 	for _, contact := range securityTxt.Contact {
 		contactInfo := categorizeContact(contact)
-		
+
 		// Apply type filter if specified
 		if len(filterTypes) > 0 {
 			found := false
@@ -157,7 +157,7 @@ func extractContactsFromSecurityTxt(securityTxt *core.SecurityTxt, filterTypes [
 				continue
 			}
 		}
-		
+
 		contacts = append(contacts, contactInfo)
 	}
 
@@ -165,7 +165,7 @@ func extractContactsFromSecurityTxt(securityTxt *core.SecurityTxt, filterTypes [
 	if preferEmail {
 		emailContacts := make([]ContactInfo, 0)
 		otherContacts := make([]ContactInfo, 0)
-		
+
 		for _, contact := range contacts {
 			if contact.Type == "email" {
 				emailContacts = append(emailContacts, contact)
@@ -173,19 +173,17 @@ func extractContactsFromSecurityTxt(securityTxt *core.SecurityTxt, filterTypes [
 				otherContacts = append(otherContacts, contact)
 			}
 		}
-		
+
 		contacts = append(emailContacts, otherContacts...)
 	}
 
 	return contacts
 }
 
-
-
 // categorizeContact determines the type of contact information
 func categorizeContact(contact string) ContactInfo {
 	contact = strings.TrimSpace(contact)
-	
+
 	if strings.Contains(contact, "@") && !strings.HasPrefix(contact, "http") {
 		return ContactInfo{
 			Value:      contact,
@@ -194,7 +192,7 @@ func categorizeContact(contact string) ContactInfo {
 			Confidence: calculateEmailConfidence(contact),
 		}
 	}
-	
+
 	if strings.HasPrefix(contact, "http://") || strings.HasPrefix(contact, "https://") {
 		return ContactInfo{
 			Value:      contact,
@@ -203,7 +201,7 @@ func categorizeContact(contact string) ContactInfo {
 			Confidence: calculateURLConfidence(contact),
 		}
 	}
-	
+
 	if strings.HasPrefix(contact, "tel:") {
 		return ContactInfo{
 			Value:      contact,
@@ -212,7 +210,7 @@ func categorizeContact(contact string) ContactInfo {
 			Confidence: calculatePhoneConfidence(contact),
 		}
 	}
-	
+
 	return ContactInfo{
 		Value:      contact,
 		Type:       "unknown",
@@ -239,19 +237,19 @@ func isValidPhone(phone string) bool {
 // calculateEmailConfidence calculates confidence score for email addresses
 func calculateEmailConfidence(email string) float64 {
 	confidence := 0.5 // Base confidence
-	
+
 	// Security-specific email patterns
 	if strings.Contains(email, "security@") {
 		confidence += 0.3
 	} else if strings.Contains(email, "vuln") || strings.Contains(email, "bug") {
 		confidence += 0.2
 	}
-	
+
 	// Domain validation
 	if strings.Contains(email, ".") {
 		confidence += 0.1
 	}
-	
+
 	// Common security email patterns
 	securityPatterns := []string{"security", "vuln", "bug", "disclosure", "responsible"}
 	for _, pattern := range securityPatterns {
@@ -260,23 +258,23 @@ func calculateEmailConfidence(email string) float64 {
 			break
 		}
 	}
-	
+
 	if confidence > 1.0 {
 		confidence = 1.0
 	}
-	
+
 	return confidence
 }
 
 // calculateURLConfidence calculates confidence score for URLs
 func calculateURLConfidence(url string) float64 {
 	confidence := 0.5 // Base confidence
-	
+
 	// HTTPS bonus
 	if strings.HasPrefix(url, "https://") {
 		confidence += 0.2
 	}
-	
+
 	// Known platforms
 	platforms := []string{"hackerone.com", "bugcrowd.com", "github.com", "gitlab.com"}
 	for _, platform := range platforms {
@@ -285,11 +283,11 @@ func calculateURLConfidence(url string) float64 {
 			break
 		}
 	}
-	
+
 	if confidence > 1.0 {
 		confidence = 1.0
 	}
-	
+
 	return confidence
 }
 

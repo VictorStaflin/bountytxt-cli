@@ -10,7 +10,7 @@ const (
 	DefaultUserAgent    = "bountytxt/1.0 (+https://github.com/bountytxt/bountytxt)"
 
 	// Rate limiting defaults
-	DefaultMaxRPS     = 10
+	DefaultMaxRPS      = 10
 	DefaultConcurrency = 5
 
 	// Security.txt paths according to RFC 9116
@@ -46,16 +46,16 @@ const (
 	FormatYAML  = "yaml"
 
 	// Exit codes for CI integration
-	ExitSuccess          = 0
-	ExitValidationFailed = 1
-	ExitNotFound         = 2
-	ExitNetworkError     = 3
-	ExitInvalidInput     = 4
-	ExitCodeError        = 3
-	ExitCodeNotFound     = 2
-	ExitCodeSuccess      = 0
+	ExitSuccess             = 0
+	ExitValidationFailed    = 1
+	ExitNotFound            = 2
+	ExitNetworkError        = 3
+	ExitInvalidInput        = 4
+	ExitCodeError           = 3
+	ExitCodeNotFound        = 2
+	ExitCodeSuccess         = 0
 	ExitCodeThresholdNotMet = 1
-	ExitCodeInvalid      = 4
+	ExitCodeInvalid         = 4
 )
 
 // OutputConfig holds output-specific configuration
@@ -128,22 +128,22 @@ func DefaultConfig() *Config {
 			Verbose: false,
 			Quiet:   false,
 		},
-		CacheEnabled:     false,
-		CacheTTL:         24 * time.Hour,
-		HonorRobots:      true,
-		PublicMode:       true,
-		FailOnExpiring:   30,
-		Compliance:       false,
+		CacheEnabled:   false,
+		CacheTTL:       24 * time.Hour,
+		HonorRobots:    true,
+		PublicMode:     true,
+		FailOnExpiring: 30,
+		Compliance:     false,
 	}
 }
 
 // PlatformPatterns maps platform names to their URL patterns
 var PlatformPatterns = map[string]string{
-	"HackerOne":  HackerOnePattern,
-	"Bugcrowd":   BugcrowdPattern,
-	"Intigriti":  IntigritiPattern,
-	"YesWeHack":  YesWeHackPattern,
-	"Synack":     SynackPattern,
+	"HackerOne": HackerOnePattern,
+	"Bugcrowd":  BugcrowdPattern,
+	"Intigriti": IntigritiPattern,
+	"YesWeHack": YesWeHackPattern,
+	"Synack":    SynackPattern,
 }
 
 // EmailPatterns maps email types to their patterns with confidence scores
@@ -158,13 +158,13 @@ var EmailPatterns = map[string]int{
 // RFC 9116 field names (case-insensitive but stored in title case)
 // RFC 9116 field mappings for normalization
 var RFC9116Fields = map[string]string{
-	"contact":           "Contact",
-	"expires":           "Expires",
-	"encryption":        "Encryption",
-	"acknowledgments":   "Acknowledgments",
-	"acknowledgements":  "Acknowledgments", // Alternative spelling
+	"contact":             "Contact",
+	"expires":             "Expires",
+	"encryption":          "Encryption",
+	"acknowledgments":     "Acknowledgments",
+	"acknowledgements":    "Acknowledgments", // Alternative spelling
 	"preferred-languages": "Preferred-Languages",
-	"canonical":         "Canonical",
-	"policy":           "Policy",
-	"hiring":           "Hiring",
+	"canonical":           "Canonical",
+	"policy":              "Policy",
+	"hiring":              "Hiring",
 }

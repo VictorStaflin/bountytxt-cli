@@ -37,17 +37,17 @@ func TestNewEngine(t *testing.T) {
 
 func TestValidate_ValidSecurityTxt(t *testing.T) {
 	engine := NewEngine(nil)
-	
+
 	futureTime := time.Now().Add(30 * 24 * time.Hour)
 	securityTxt := &core.SecurityTxt{
-		Contact:     []string{"mailto:security@example.com"},
-		Expires:     &futureTime,
-		Canonical:   []string{"https://example.com/.well-known/security.txt"},
-		RawContent:  "Contact: mailto:security@example.com\nExpires: " + futureTime.Format(time.RFC3339),
+		Contact:    []string{"mailto:security@example.com"},
+		Expires:    &futureTime,
+		Canonical:  []string{"https://example.com/.well-known/security.txt"},
+		RawContent: "Contact: mailto:security@example.com\nExpires: " + futureTime.Format(time.RFC3339),
 	}
 
 	report := engine.Validate(securityTxt)
-	
+
 	if report == nil {
 		t.Fatal("Validate returned nil report")
 	}
@@ -63,13 +63,13 @@ func TestValidate_ValidSecurityTxt(t *testing.T) {
 
 func TestValidate_MissingRequiredFields(t *testing.T) {
 	engine := NewEngine(nil)
-	
+
 	securityTxt := &core.SecurityTxt{
 		RawContent: "Policy: https://example.com/policy",
 	}
 
 	report := engine.Validate(securityTxt)
-	
+
 	if report == nil {
 		t.Fatal("Validate returned nil report")
 	}
@@ -94,7 +94,7 @@ func TestValidate_MissingRequiredFields(t *testing.T) {
 
 func TestValidate_ExpiredSecurityTxt(t *testing.T) {
 	engine := NewEngine(nil)
-	
+
 	pastTime := time.Now().Add(-30 * 24 * time.Hour)
 	securityTxt := &core.SecurityTxt{
 		Contact:    []string{"mailto:security@example.com"},
@@ -103,7 +103,7 @@ func TestValidate_ExpiredSecurityTxt(t *testing.T) {
 	}
 
 	report := engine.Validate(securityTxt)
-	
+
 	if report == nil {
 		t.Fatal("Validate returned nil report")
 	}
@@ -124,7 +124,7 @@ func TestValidate_ExpiredSecurityTxt(t *testing.T) {
 
 func TestValidate_InvalidContactFormat(t *testing.T) {
 	engine := NewEngine(nil)
-	
+
 	futureTime := time.Now().Add(30 * 24 * time.Hour)
 	securityTxt := &core.SecurityTxt{
 		Contact:    []string{"invalid-contact-format"},
@@ -133,7 +133,7 @@ func TestValidate_InvalidContactFormat(t *testing.T) {
 	}
 
 	report := engine.Validate(securityTxt)
-	
+
 	if report == nil {
 		t.Fatal("Validate returned nil report")
 	}
@@ -154,19 +154,19 @@ func TestValidate_InvalidContactFormat(t *testing.T) {
 
 func TestValidate_ScoreCalculation(t *testing.T) {
 	engine := NewEngine(nil)
-	
+
 	tests := []struct {
-		name           string
-		securityTxt    *core.SecurityTxt
+		name             string
+		securityTxt      *core.SecurityTxt
 		expectedMinScore int
 		expectedMaxScore int
 	}{
 		{
 			name: "perfect security.txt",
 			securityTxt: &core.SecurityTxt{
-				Contact:   []string{"mailto:security@example.com"},
-				Expires:   timePtr(time.Now().Add(30 * 24 * time.Hour)),
-				Canonical: []string{"https://example.com/.well-known/security.txt"},
+				Contact:    []string{"mailto:security@example.com"},
+				Expires:    timePtr(time.Now().Add(30 * 24 * time.Hour)),
+				Canonical:  []string{"https://example.com/.well-known/security.txt"},
 				RawContent: "Contact: mailto:security@example.com",
 			},
 			expectedMinScore: 90,
@@ -194,9 +194,9 @@ func TestValidate_ScoreCalculation(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			report := engine.Validate(tt.securityTxt)
-			
+
 			if report.Score < tt.expectedMinScore || report.Score > tt.expectedMaxScore {
-				t.Errorf("Score %d not in expected range [%d, %d]", 
+				t.Errorf("Score %d not in expected range [%d, %d]",
 					report.Score, tt.expectedMinScore, tt.expectedMaxScore)
 			}
 
@@ -213,7 +213,7 @@ func TestValidate_ScoreCalculation(t *testing.T) {
 			// Verify grade matches score
 			expectedGrade := calculateExpectedGrade(report.Score)
 			if report.Grade != expectedGrade {
-				t.Errorf("Grade %s doesn't match score %d (expected %s)", 
+				t.Errorf("Grade %s doesn't match score %d (expected %s)",
 					report.Grade, report.Score, expectedGrade)
 			}
 		})
@@ -222,14 +222,14 @@ func TestValidate_ScoreCalculation(t *testing.T) {
 
 func TestValidate_IssueStructure(t *testing.T) {
 	engine := NewEngine(nil)
-	
+
 	securityTxt := &core.SecurityTxt{
 		Contact:    []string{"invalid-contact"},
 		RawContent: "Contact: invalid-contact",
 	}
 
 	report := engine.Validate(securityTxt)
-	
+
 	if report == nil {
 		t.Fatal("Validate returned nil report")
 	}
@@ -247,7 +247,7 @@ func TestValidate_IssueStructure(t *testing.T) {
 		if issue.Severity == "" {
 			t.Errorf("Issue %d has empty severity", i)
 		}
-		
+
 		// Verify severity is valid
 		validSeverities := map[string]bool{
 			"error":   true,

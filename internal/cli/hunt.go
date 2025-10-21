@@ -50,7 +50,7 @@ func init() {
 
 func runHunt(cmd *cobra.Command, args []string) error {
 	domain := args[0]
-	
+
 	// Get flag values
 	customSubdomains, _ := cmd.Flags().GetStringSlice("subdomains")
 	includeWildcards, _ := cmd.Flags().GetBool("include-wildcards")
@@ -84,7 +84,7 @@ func runHunt(cmd *cobra.Command, args []string) error {
 
 	for _, target := range targets {
 		result := huntSingleTarget(ctx, discoveryService, target, showAttempts)
-		
+
 		if result.Found {
 			foundCount++
 		}
@@ -137,22 +137,22 @@ func runHunt(cmd *cobra.Command, args []string) error {
 
 // HuntResult represents the result of hunting a single target
 type HuntResult struct {
-	Domain      string   `json:"domain"`
-	Found       bool     `json:"found"`
-	SourceURL   string   `json:"source_url,omitempty"`
-	Attempts    []string `json:"attempts,omitempty"`
-	Error       string   `json:"error,omitempty"`
-	Type        string   `json:"type"` // main, subdomain, wildcard
-	Depth       int      `json:"depth"`
+	Domain    string   `json:"domain"`
+	Found     bool     `json:"found"`
+	SourceURL string   `json:"source_url,omitempty"`
+	Attempts  []string `json:"attempts,omitempty"`
+	Error     string   `json:"error,omitempty"`
+	Type      string   `json:"type"` // main, subdomain, wildcard
+	Depth     int      `json:"depth"`
 }
 
 // generateHuntTargets generates a list of domains to hunt
-func generateHuntTargets(baseDomain string, customSubdomains []string, includeWildcards bool, 
+func generateHuntTargets(baseDomain string, customSubdomains []string, includeWildcards bool,
 	maxDepth int, exclude []string, maxSubdomains int) []string {
-	
+
 	targets := make([]string, 0)
 	seen := make(map[string]bool)
-	
+
 	// Add base domain
 	targets = append(targets, baseDomain)
 	seen[baseDomain] = true
@@ -168,12 +168,12 @@ func generateHuntTargets(baseDomain string, customSubdomains []string, includeWi
 		if len(targets) >= maxSubdomains {
 			break
 		}
-		
+
 		// Skip excluded subdomains
 		if contains(exclude, subdomain) {
 			continue
 		}
-		
+
 		target := subdomain + "." + baseDomain
 		if !seen[target] {
 			targets = append(targets, target)
@@ -219,7 +219,7 @@ func getCommonSubdomains() []string {
 // generateWildcardTargets generates wildcard subdomain patterns
 func generateWildcardTargets(baseDomain string, maxDepth int) []string {
 	targets := make([]string, 0)
-	
+
 	// Common wildcard patterns
 	patterns := []string{
 		"*", "test-*", "dev-*", "staging-*", "prod-*",
@@ -242,9 +242,9 @@ func generateWildcardTargets(baseDomain string, maxDepth int) []string {
 }
 
 // huntSingleTarget hunts for security.txt on a single target
-func huntSingleTarget(ctx context.Context, discoveryService *discovery.Service, 
+func huntSingleTarget(ctx context.Context, discoveryService *discovery.Service,
 	target string, showAttempts bool) HuntResult {
-	
+
 	result := HuntResult{
 		Domain: target,
 		Type:   determineTargetType(target),
@@ -282,13 +282,13 @@ func determineTargetType(target string) string {
 	if len(parts) <= 2 {
 		return "main"
 	}
-	
+
 	subdomain := parts[0]
-	if strings.Contains(subdomain, "-") && (strings.Contains(subdomain, "1") || 
+	if strings.Contains(subdomain, "-") && (strings.Contains(subdomain, "1") ||
 		strings.Contains(subdomain, "2") || strings.Contains(subdomain, "test")) {
 		return "wildcard"
 	}
-	
+
 	return "subdomain"
 }
 

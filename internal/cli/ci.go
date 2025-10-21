@@ -57,7 +57,7 @@ func init() {
 
 func runCI(cmd *cobra.Command, args []string) error {
 	domain := args[0]
-	
+
 	// Get flag values
 	minScore, _ := cmd.Flags().GetInt("min-score")
 	minGrade, _ := cmd.Flags().GetString("min-grade")
@@ -111,15 +111,15 @@ func runCI(cmd *cobra.Command, args []string) error {
 
 	// Prepare output data
 	outputData := map[string]interface{}{
-		"domain":      report.Domain,
-		"source_url":  report.SourceURL,
-		"found":       report.Found,
-		"score":       report.Score,
-		"grade":       report.Grade,
-		"passed":      ciResult.Passed,
-		"exit_code":   ciResult.ExitCode,
-		"issues":      filterIssues(report.Issues, ignoreIssues),
-		"ci_summary":  ciResult.Summary,
+		"domain":     report.Domain,
+		"source_url": report.SourceURL,
+		"found":      report.Found,
+		"score":      report.Score,
+		"grade":      report.Grade,
+		"passed":     ciResult.Passed,
+		"exit_code":  ciResult.ExitCode,
+		"issues":     filterIssues(report.Issues, ignoreIssues),
+		"ci_summary": ciResult.Summary,
 	}
 
 	// Add GitHub Actions specific output
@@ -162,9 +162,9 @@ type CIValidationOptions struct {
 
 // CIResult holds the result of CI validation
 type CIResult struct {
-	Passed   bool   `json:"passed"`
-	ExitCode int    `json:"exit_code"`
-	Summary  string `json:"summary"`
+	Passed   bool     `json:"passed"`
+	ExitCode int      `json:"exit_code"`
+	Summary  string   `json:"summary"`
 	Reasons  []string `json:"reasons,omitempty"`
 }
 
@@ -188,7 +188,7 @@ func applyCIValidation(report *core.LintReport, options CIValidationOptions) CIR
 		gradeValues := map[string]int{
 			"A": 90, "B": 80, "C": 70, "D": 60, "F": 0,
 		}
-		
+
 		if requiredScore, exists := gradeValues[strings.ToUpper(options.MinGrade)]; exists {
 			if report.Score < requiredScore {
 				result.Passed = false
@@ -299,7 +299,7 @@ func generateGitHubActionsOutput(ciResult CIResult, report *core.LintReport) map
 	if ciResult.Passed {
 		conclusion = "success"
 	}
-	
+
 	return map[string]interface{}{
 		"workflow_status": map[string]interface{}{
 			"conclusion": conclusion,
@@ -355,7 +355,7 @@ func exitWithCode(code int, message string, githubActions bool) error {
 	} else if !config.Output.Quiet {
 		fmt.Fprintf(os.Stderr, "Error: %s\n", message)
 	}
-	
+
 	os.Exit(code)
 	return nil // Never reached
 }

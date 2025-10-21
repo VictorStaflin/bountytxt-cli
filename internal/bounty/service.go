@@ -14,9 +14,9 @@ import (
 
 // Service handles bug bounty program analysis
 type Service struct {
-	config    *core.Config
+	config     *core.Config
 	httpClient *http.Client
-	discovery *discovery.Service
+	discovery  *discovery.Service
 }
 
 // Program represents a bug bounty program
@@ -48,11 +48,11 @@ type RewardRange struct {
 
 // Scope represents the program scope
 type Scope struct {
-	InScope     []Asset `json:"in_scope"`
-	OutOfScope  []Asset `json:"out_of_scope"`
-	AssetCount  int     `json:"asset_count"`
-	Subdomains  bool    `json:"subdomains"`
-	Wildcards   bool    `json:"wildcards"`
+	InScope    []Asset `json:"in_scope"`
+	OutOfScope []Asset `json:"out_of_scope"`
+	AssetCount int     `json:"asset_count"`
+	Subdomains bool    `json:"subdomains"`
+	Wildcards  bool    `json:"wildcards"`
 }
 
 // Asset represents a target asset
@@ -74,12 +74,12 @@ type ResponseTime struct {
 
 // SecurityTxtInfo represents information from security.txt
 type SecurityTxtInfo struct {
-	HasSecurityTxt   bool     `json:"has_security_txt"`
-	PolicyURL        string   `json:"policy_url"`
-	ContactEmails    []string `json:"contact_emails"`
-	PreferredLangs   []string `json:"preferred_langs"`
-	Acknowledgment   string   `json:"acknowledgment"`
-	Expires          string   `json:"expires"`
+	HasSecurityTxt bool     `json:"has_security_txt"`
+	PolicyURL      string   `json:"policy_url"`
+	ContactEmails  []string `json:"contact_emails"`
+	PreferredLangs []string `json:"preferred_langs"`
+	Acknowledgment string   `json:"acknowledgment"`
+	Expires        string   `json:"expires"`
 }
 
 // ProgramDatabase represents external program data
@@ -188,7 +188,7 @@ func (s *Service) getSecurityTxtInfo(domain string) (*SecurityTxtInfo, error) {
 	if err != nil || !result.Found || result.SecurityTxt == nil {
 		return &SecurityTxtInfo{HasSecurityTxt: false}, err
 	}
-	
+
 	securityTxt := result.SecurityTxt
 
 	info := &SecurityTxtInfo{
@@ -232,7 +232,7 @@ func (s *Service) getSecurityTxtInfo(domain string) (*SecurityTxtInfo, error) {
 func (s *Service) extractProgramFromSecurityTxt(program *Program) {
 	if program.SecurityTxtInfo.PolicyURL != "" {
 		program.URL = program.SecurityTxtInfo.PolicyURL
-		
+
 		// Try to extract additional information from policy URL
 		if strings.Contains(program.SecurityTxtInfo.PolicyURL, "hackerone.com") {
 			program.Platform = "HackerOne"
@@ -262,7 +262,7 @@ func (s *Service) detectPlatformFromURL(programURL string) string {
 	}
 
 	hostname := strings.ToLower(u.Hostname())
-	
+
 	switch {
 	case strings.Contains(hostname, "hackerone.com"):
 		return "HackerOne"
@@ -317,7 +317,7 @@ func (s *Service) determineProgramType(info SecurityTxtInfo) string {
 func (s *Service) detectExternalProgram(program *Program) {
 	// This would typically involve API calls to HackerOne, Bugcrowd, etc.
 	// For now, we'll use heuristics based on the domain
-	
+
 	// Set industry based on domain patterns
 	domain := strings.ToLower(program.Domain)
 	switch {
@@ -413,7 +413,7 @@ func (s *Service) estimateRewards(program *Program) {
 	// Determine if bounties are offered
 	if program.SecurityTxtInfo.PolicyURL != "" {
 		rewards.HasBounties = true
-		
+
 		// Estimate based on platform and industry
 		switch program.Platform {
 		case "HackerOne":

@@ -74,7 +74,7 @@ func (rl *RateLimiter) refillTokens() {
 			rl.mu.Unlock()
 			return
 		}
-		
+
 		// Try to add a token if there's space
 		select {
 		case rl.tokens <- struct{}{}:
@@ -89,7 +89,7 @@ func (rl *RateLimiter) refillTokens() {
 func (rl *RateLimiter) Close() {
 	rl.mu.Lock()
 	defer rl.mu.Unlock()
-	
+
 	if !rl.closed {
 		rl.closed = true
 		if rl.ticker != nil {
@@ -103,7 +103,7 @@ func (rl *RateLimiter) Close() {
 func (rl *RateLimiter) Stats() map[string]interface{} {
 	rl.mu.Lock()
 	defer rl.mu.Unlock()
-	
+
 	return map[string]interface{}{
 		"available_tokens": len(rl.tokens),
 		"max_tokens":       rl.maxTokens,

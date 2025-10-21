@@ -7,25 +7,25 @@ import (
 
 // SecurityTxt represents a parsed security.txt file according to RFC 9116
 type SecurityTxt struct {
-	SourceURL       string              `json:"source_url"`
-	Status          int                 `json:"status"`
-	FetchedAt       time.Time           `json:"fetched_at"`
-	Fields          map[string][]string `json:"fields"` // Title-cased keys
-	Raw             string              `json:"raw,omitempty"`
-	RawContent      string              `json:"raw_content,omitempty"`
-	
+	SourceURL  string              `json:"source_url"`
+	Status     int                 `json:"status"`
+	FetchedAt  time.Time           `json:"fetched_at"`
+	Fields     map[string][]string `json:"fields"` // Title-cased keys
+	Raw        string              `json:"raw,omitempty"`
+	RawContent string              `json:"raw_content,omitempty"`
+
 	// Parsed fields for easier access
-	Contact         []string           `json:"contact,omitempty"`
-	Expires         *time.Time         `json:"expires,omitempty"`
-	Encryption      []string           `json:"encryption,omitempty"`
-	Acknowledgments []string           `json:"acknowledgments,omitempty"`
-	Canonical       []string           `json:"canonical,omitempty"`
-	Policy          []string           `json:"policy,omitempty"`
-	Hiring          []string           `json:"hiring,omitempty"`
-	Languages       []string           `json:"languages,omitempty"`
-	CSAF            []string           `json:"csaf,omitempty"`
-	PreferredLangs  []string           `json:"preferred_langs,omitempty"`
-	Extensions      map[string]string  `json:"extensions,omitempty"`
+	Contact         []string          `json:"contact,omitempty"`
+	Expires         *time.Time        `json:"expires,omitempty"`
+	Encryption      []string          `json:"encryption,omitempty"`
+	Acknowledgments []string          `json:"acknowledgments,omitempty"`
+	Canonical       []string          `json:"canonical,omitempty"`
+	Policy          []string          `json:"policy,omitempty"`
+	Hiring          []string          `json:"hiring,omitempty"`
+	Languages       []string          `json:"languages,omitempty"`
+	CSAF            []string          `json:"csaf,omitempty"`
+	PreferredLangs  []string          `json:"preferred_langs,omitempty"`
+	Extensions      map[string]string `json:"extensions,omitempty"`
 }
 
 // Issue represents a validation issue
@@ -74,18 +74,18 @@ type DiscoveryResult struct {
 
 // Contact represents a contact method with confidence scoring
 type Contact struct {
-	Type       string `json:"type"`        // email, url, phone
+	Type       string `json:"type"` // email, url, phone
 	Value      string `json:"value"`
-	Source     string `json:"source"`      // security.txt, guessed, dns
-	Confidence int    `json:"confidence"`  // 0-100
+	Source     string `json:"source"`     // security.txt, guessed, dns
+	Confidence int    `json:"confidence"` // 0-100
 	Validated  bool   `json:"validated"`
 }
 
 // ContactIntelligence represents analyzed contact information with metadata
 type ContactIntelligence struct {
 	Contact    string                 `json:"contact"`
-	Type       string                 `json:"type"`        // email, url, phone
-	Confidence float64                `json:"confidence"`  // 0.0-1.0
+	Type       string                 `json:"type"`       // email, url, phone
+	Confidence float64                `json:"confidence"` // 0.0-1.0
 	Metadata   map[string]interface{} `json:"metadata"`
 }
 
@@ -101,16 +101,16 @@ type Platform struct {
 
 // Fallback contains fallback discovery information
 type Fallback struct {
-	URL             string       `json:"url,omitempty"`
-	Method          string       `json:"method,omitempty"`
-	AttemptedAt     time.Time    `json:"attempted_at,omitempty"`
-	StatusCode      int          `json:"status_code,omitempty"`
-	Success         bool         `json:"success"`
-	Error           string       `json:"error,omitempty"`
-	GuessedContacts []Contact    `json:"guessed_contacts,omitempty"`
-	DNSRecords      []DNSRecord  `json:"dns_records,omitempty"`
-	RDAPInfo        *RDAPInfo    `json:"rdap_info,omitempty"`
-	SecurityPages   []string     `json:"security_pages,omitempty"`
+	URL             string      `json:"url,omitempty"`
+	Method          string      `json:"method,omitempty"`
+	AttemptedAt     time.Time   `json:"attempted_at,omitempty"`
+	StatusCode      int         `json:"status_code,omitempty"`
+	Success         bool        `json:"success"`
+	Error           string      `json:"error,omitempty"`
+	GuessedContacts []Contact   `json:"guessed_contacts,omitempty"`
+	DNSRecords      []DNSRecord `json:"dns_records,omitempty"`
+	RDAPInfo        *RDAPInfo   `json:"rdap_info,omitempty"`
+	SecurityPages   []string    `json:"security_pages,omitempty"`
 }
 
 // DNSRecord represents DNS information for fallback discovery
@@ -129,14 +129,14 @@ type RDAPInfo struct {
 
 // FetchOptions configures security.txt fetching behavior
 type FetchOptions struct {
-	Timeout         time.Duration
-	MaxRedirects    int
-	UserAgent       string
-	FollowRobots    bool
-	VerifyTLS       bool
-	CacheEnabled    bool
-	RetryAttempts   int
-	Headers         map[string]string
+	Timeout       time.Duration
+	MaxRedirects  int
+	UserAgent     string
+	FollowRobots  bool
+	VerifyTLS     bool
+	CacheEnabled  bool
+	RetryAttempts int
+	Headers       map[string]string
 }
 
 // ValidationRules configures validation behavior
@@ -174,15 +174,15 @@ type BulkOptions struct {
 
 // BulkResult represents the result of processing a single domain in bulk
 type BulkResult struct {
-	Domain           string           `json:"domain"`
-	Found            bool             `json:"found"`
-	SourceURL        string           `json:"source_url,omitempty"`
-	Error            string           `json:"error,omitempty"`
-	ValidationPassed bool             `json:"validation_passed,omitempty"`
-	Score            int              `json:"score,omitempty"`
-	Grade            string           `json:"grade,omitempty"`
+	Domain           string            `json:"domain"`
+	Found            bool              `json:"found"`
+	SourceURL        string            `json:"source_url,omitempty"`
+	Error            string            `json:"error,omitempty"`
+	ValidationPassed bool              `json:"validation_passed,omitempty"`
+	Score            int               `json:"score,omitempty"`
+	Grade            string            `json:"grade,omitempty"`
 	Issues           []ValidationIssue `json:"issues,omitempty"`
-	ProcessedAt      time.Time        `json:"processed_at"`
+	ProcessedAt      time.Time         `json:"processed_at"`
 }
 
 // Core interfaces for the application

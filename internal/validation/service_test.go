@@ -64,16 +64,16 @@ Canonical: https://example.com/.well-known/security.txt`,
 			expectGrade: "A",
 		},
 		{
-			name: "minimal security.txt",
-			content: `Contact: mailto:security@example.com`,
+			name:        "minimal security.txt",
+			content:     `Contact: mailto:security@example.com`,
 			sourceURL:   "https://example.com/.well-known/security.txt",
 			expectFound: true,
 			expectScore: 70, // Should be lower due to missing recommended fields
 			expectGrade: "C",
 		},
 		{
-			name: "invalid content",
-			content: `Invalid content that cannot be parsed`,
+			name:        "invalid content",
+			content:     `Invalid content that cannot be parsed`,
 			sourceURL:   "https://example.com/.well-known/security.txt",
 			expectFound: false,
 			expectScore: 0,
@@ -84,7 +84,7 @@ Canonical: https://example.com/.well-known/security.txt`,
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			report := service.ValidateContent(tt.content, tt.sourceURL)
-			
+
 			if report == nil {
 				t.Fatal("ValidateContent returned nil report")
 			}
@@ -126,7 +126,7 @@ func TestValidateDomain_NotFound(t *testing.T) {
 
 	// Test with a domain that likely doesn't have security.txt
 	report, err := service.ValidateDomain(ctx, "nonexistent-domain-12345.com")
-	
+
 	// We expect either an error (DNS resolution failure) or a report indicating not found
 	if err == nil {
 		if report == nil {
@@ -169,7 +169,7 @@ func TestValidateBulk(t *testing.T) {
 	}
 
 	reports, err := service.ValidateBulk(ctx, domains, options)
-	
+
 	// We expect either an error or reports for all domains
 	if err == nil {
 		if len(reports) != len(domains) {
@@ -198,7 +198,7 @@ func TestServiceClose(t *testing.T) {
 	}
 
 	service := NewService(config)
-	
+
 	err := service.Close()
 	if err != nil {
 		t.Errorf("Close returned error: %v", err)

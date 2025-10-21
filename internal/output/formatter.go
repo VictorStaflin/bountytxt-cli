@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"gopkg.in/yaml.v3"
 	"github.com/victorstaflin/bountytxt-cli/internal/core"
+	"gopkg.in/yaml.v3"
 )
 
 // Formatter interface for different output formats
@@ -659,8 +659,8 @@ func (f *SARIFFormatter) formatLintReportSARIF(report *core.LintReport) (string,
 			{
 				"tool": map[string]interface{}{
 					"driver": map[string]interface{}{
-						"name":    "bountytxt",
-						"version": "1.0.0",
+						"name":           "bountytxt",
+						"version":        "1.0.0",
 						"informationUri": "https://github.com/example/bountytxt",
 					},
 				},
@@ -691,8 +691,8 @@ func (f *SARIFFormatter) formatLintReportsSARIF(reports []core.LintReport) (stri
 			{
 				"tool": map[string]interface{}{
 					"driver": map[string]interface{}{
-						"name":    "bountytxt",
-						"version": "1.0.0",
+						"name":           "bountytxt",
+						"version":        "1.0.0",
 						"informationUri": "https://github.com/example/bountytxt",
 					},
 				},
@@ -1018,7 +1018,7 @@ func (f *TableFormatter) formatCIOutput(data map[string]interface{}) string {
 	output.WriteString(fmt.Sprintf("Found: %t\n", found))
 	output.WriteString(fmt.Sprintf("Score: %d\n", score))
 	output.WriteString(fmt.Sprintf("Grade: %s\n", grade))
-	
+
 	// CI Results
 	passedStr := "❌ FAILED"
 	if passed {

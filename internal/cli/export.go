@@ -58,7 +58,7 @@ func init() {
 
 func runExport(cmd *cobra.Command, args []string) error {
 	domain := args[0]
-	
+
 	// Get flag values
 	format, _ := cmd.Flags().GetString("format")
 	outputFile, _ := cmd.Flags().GetString("output")
@@ -119,7 +119,7 @@ func runExport(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return fmt.Errorf("failed to write output file: %w", err)
 		}
-		
+
 		if !config.Output.Quiet {
 			fmt.Fprintf(os.Stderr, "Exported to: %s\n", outputFile)
 		}
@@ -147,14 +147,14 @@ type ExporterOptions struct {
 
 // ExportData holds all data for export
 type ExportData struct {
-	Domain           string                 `json:"domain"`
-	Timestamp        time.Time              `json:"timestamp"`
-	Found            bool                   `json:"found"`
-	SourceURL        string                 `json:"source_url,omitempty"`
-	SecurityTxt      map[string][]string    `json:"security_txt,omitempty"`
-	RawContent       string                 `json:"raw_content,omitempty"`
-	ValidationReport *ValidationExport      `json:"validation,omitempty"`
-	Metadata         *MetadataExport        `json:"metadata,omitempty"`
+	Domain           string              `json:"domain"`
+	Timestamp        time.Time           `json:"timestamp"`
+	Found            bool                `json:"found"`
+	SourceURL        string              `json:"source_url,omitempty"`
+	SecurityTxt      map[string][]string `json:"security_txt,omitempty"`
+	RawContent       string              `json:"raw_content,omitempty"`
+	ValidationReport *ValidationExport   `json:"validation,omitempty"`
+	Metadata         *MetadataExport     `json:"metadata,omitempty"`
 }
 
 // ValidationExport holds validation data for export
@@ -167,22 +167,22 @@ type ValidationExport struct {
 
 // ValidationIssueExport holds validation issue data for export
 type ValidationIssueExport struct {
-	Type        string `json:"type"`
-	Severity    string `json:"severity"`
-	Message     string `json:"message"`
-	Field       string `json:"field,omitempty"`
-	Line        int    `json:"line,omitempty"`
-	Suggestion  string `json:"suggestion,omitempty"`
+	Type       string `json:"type"`
+	Severity   string `json:"severity"`
+	Message    string `json:"message"`
+	Field      string `json:"field,omitempty"`
+	Line       int    `json:"line,omitempty"`
+	Suggestion string `json:"suggestion,omitempty"`
 }
 
 // MetadataExport holds metadata for export
 type MetadataExport struct {
-	DiscoveryAttempts []string  `json:"discovery_attempts"`
-	ResponseTime      string    `json:"response_time"`
-	ContentLength     int       `json:"content_length"`
-	LastModified      string    `json:"last_modified,omitempty"`
-	ETag              string    `json:"etag,omitempty"`
-	ServerHeader      string    `json:"server,omitempty"`
+	DiscoveryAttempts []string `json:"discovery_attempts"`
+	ResponseTime      string   `json:"response_time"`
+	ContentLength     int      `json:"content_length"`
+	LastModified      string   `json:"last_modified,omitempty"`
+	ETag              string   `json:"etag,omitempty"`
+	ServerHeader      string   `json:"server,omitempty"`
 }
 
 // Exporter interface for different export formats
@@ -193,7 +193,7 @@ type Exporter interface {
 // gatherExportData collects all data for export
 func gatherExportData(ctx context.Context, domain string, discoveryService *discovery.Service,
 	validationService *validation.Service, options ExportOptions) (*ExportData, error) {
-	
+
 	exportData := &ExportData{
 		Domain:    domain,
 		Timestamp: time.Now(),
@@ -209,7 +209,7 @@ func gatherExportData(ctx context.Context, domain string, discoveryService *disc
 	if result.Found {
 		exportData.SourceURL = result.SecurityTxt.SourceURL
 		exportData.SecurityTxt = filterFields(result.SecurityTxt.Fields, options.Fields)
-		
+
 		if options.IncludeRaw {
 			exportData.RawContent = result.SecurityTxt.RawContent
 		}
@@ -330,12 +330,12 @@ func (e *JSONExporter) Export(data *ExportData) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	result, err := formatter.Format(data)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return []byte(result), nil
 }
 
@@ -347,12 +347,12 @@ func (e *YAMLExporter) Export(data *ExportData) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	result, err := formatter.Format(data)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return []byte(result), nil
 }
 
@@ -366,14 +366,14 @@ func (e *CSVExporter) Export(data *ExportData) ([]byte, error) {
 	if data.ValidationReport != nil {
 		issueCount = len(data.ValidationReport.Issues)
 	}
-	
+
 	score := "N/A"
 	grade := "N/A"
 	if data.ValidationReport != nil {
 		score = fmt.Sprintf("%d", data.ValidationReport.Score)
 		grade = data.ValidationReport.Grade
 	}
-	
+
 	csv += fmt.Sprintf("%s,%t,%s,%s,%d\n", data.Domain, data.Found, score, grade, issueCount)
 	return []byte(csv), nil
 }
@@ -391,7 +391,7 @@ func (e *XMLExporter) Export(data *ExportData) ([]byte, error) {
   <found>` + fmt.Sprintf("%t", data.Found) + `</found>
   <timestamp>` + data.Timestamp.Format(time.RFC3339) + `</timestamp>
 </security-txt-export>`
-	
+
 	return []byte(xml), nil
 }
 
@@ -415,16 +415,16 @@ func (e *SARIFExporter) Export(data *ExportData) ([]byte, error) {
 			},
 		},
 	}
-	
+
 	formatter, err := output.GetFormatter("json")
 	if err != nil {
 		return nil, err
 	}
-	
+
 	result, err := formatter.Format(sarif)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return []byte(result), nil
 }

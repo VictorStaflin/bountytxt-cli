@@ -25,7 +25,7 @@ func NewService(config *core.Config) *Service {
 		MaxAge:            365 * 24 * time.Hour, // 1 year
 		HTTPSRequired:     true,
 	}
-	
+
 	return &Service{
 		engine:    NewEngine(rules),
 		discovery: discovery.NewService(config),
@@ -44,9 +44,9 @@ func (s *Service) ValidateDomain(ctx context.Context, domain string) (*core.Lint
 	if !result.Found || result.SecurityTxt == nil {
 		// Return a report indicating no security.txt found
 		return &core.LintReport{
-			Domain:      domain,
-			SourceURL:   "",
-			Found:       false,
+			Domain:    domain,
+			SourceURL: "",
+			Found:     false,
 			Issues: []core.Issue{{
 				Type:        "error",
 				Category:    "discovery",
@@ -62,7 +62,7 @@ func (s *Service) ValidateDomain(ctx context.Context, domain string) (*core.Lint
 
 	// Validate the discovered security.txt
 	report := s.engine.Validate(result.SecurityTxt)
-	
+
 	// Add discovery information to the report
 	report.Found = true
 	report.DiscoveryResult = result

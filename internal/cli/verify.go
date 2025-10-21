@@ -44,7 +44,7 @@ func init() {
 
 func runVerify(cmd *cobra.Command, args []string) error {
 	domain := args[0]
-	
+
 	// Get flag values
 	minScore, _ := cmd.Flags().GetInt("min-score")
 	minGrade, _ := cmd.Flags().GetString("min-grade")

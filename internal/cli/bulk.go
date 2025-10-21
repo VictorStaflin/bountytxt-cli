@@ -55,7 +55,7 @@ func init() {
 
 func runBulk(cmd *cobra.Command, args []string) error {
 	filename := args[0]
-	
+
 	// Get flag values
 	workers, _ := cmd.Flags().GetInt("workers")
 	delay, _ := cmd.Flags().GetDuration("delay")
@@ -104,7 +104,7 @@ func runBulk(cmd *cobra.Command, args []string) error {
 	// Process domains
 	ctx := context.Background()
 	results := make(chan *core.BulkResult, workers)
-	
+
 	go func() {
 		defer close(results)
 		processBulkDomains(ctx, domains, bulkOptions, validationService, results, showProgress)
@@ -118,11 +118,11 @@ func runBulk(cmd *cobra.Command, args []string) error {
 
 	for result := range results {
 		totalProcessed++
-		
+
 		if result.Found {
 			totalFound++
 		}
-		
+
 		if result.ValidationPassed {
 			totalPassed++
 		}
@@ -157,8 +157,6 @@ func runBulk(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-
-
 // readDomains reads domain names from a file or stdin
 func readDomains(filename string, maxDomains int) ([]string, error) {
 	var file *os.File
@@ -179,7 +177,7 @@ func readDomains(filename string, maxDomains int) ([]string, error) {
 
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
-		
+
 		// Skip empty lines and comments
 		if line == "" || strings.HasPrefix(line, "#") {
 			continue
@@ -189,7 +187,7 @@ func readDomains(filename string, maxDomains int) ([]string, error) {
 		domain := cleanDomain(line)
 		if domain != "" {
 			domains = append(domains, domain)
-			
+
 			// Check max domains limit
 			if maxDomains > 0 && len(domains) >= maxDomains {
 				break
@@ -209,36 +207,36 @@ func cleanDomain(domain string) string {
 	// Remove protocol if present
 	domain = strings.TrimPrefix(domain, "http://")
 	domain = strings.TrimPrefix(domain, "https://")
-	
+
 	// Remove path if present
 	if idx := strings.Index(domain, "/"); idx != -1 {
 		domain = domain[:idx]
 	}
-	
+
 	// Remove port if present
 	if idx := strings.Index(domain, ":"); idx != -1 {
 		domain = domain[:idx]
 	}
-	
+
 	// Trim whitespace
 	domain = strings.TrimSpace(domain)
-	
+
 	// Basic validation
 	if domain == "" || !strings.Contains(domain, ".") {
 		return ""
 	}
-	
+
 	return domain
 }
 
 // processBulkDomains processes domains concurrently with worker pools
-func processBulkDomains(ctx context.Context, domains []string, options *core.BulkOptions, 
+func processBulkDomains(ctx context.Context, domains []string, options *core.BulkOptions,
 	validationService *validation.Service, results chan<- *core.BulkResult, showProgress bool) {
-	
+
 	// Create worker pool
 	domainChan := make(chan string, len(domains))
 	var wg sync.WaitGroup
-	
+
 	// Start workers
 	for i := 0; i < options.Workers; i++ {
 		wg.Add(1)
@@ -247,13 +245,13 @@ func processBulkDomains(ctx context.Context, domains []string, options *core.Bul
 			bulkWorker(ctx, domainChan, options, validationService, results, showProgress)
 		}()
 	}
-	
+
 	// Send domains to workers
 	for _, domain := range domains {
 		domainChan <- domain
 	}
 	close(domainChan)
-	
+
 	// Wait for all workers to complete
 	wg.Wait()
 }
@@ -261,10 +259,10 @@ func processBulkDomains(ctx context.Context, domains []string, options *core.Bul
 // bulkWorker processes individual domains
 func bulkWorker(ctx context.Context, domains <-chan string, options *core.BulkOptions,
 	validationService *validation.Service, results chan<- *core.BulkResult, showProgress bool) {
-	
+
 	for domain := range domains {
 		result := processSingleDomain(ctx, domain, options, validationService)
-		
+
 		if showProgress && !config.Output.Quiet {
 			status := "NOT FOUND"
 			if result.Found {
@@ -278,9 +276,9 @@ func bulkWorker(ctx context.Context, domains <-chan string, options *core.BulkOp
 			}
 			fmt.Fprintf(os.Stderr, "Processed %s: %s\n", domain, status)
 		}
-		
+
 		results <- result
-		
+
 		// Rate limiting delay
 		if options.Delay > 0 {
 			time.Sleep(options.Delay)
@@ -291,7 +289,7 @@ func bulkWorker(ctx context.Context, domains <-chan string, options *core.BulkOp
 // processSingleDomain processes a single domain
 func processSingleDomain(ctx context.Context, domain string, options *core.BulkOptions,
 	validationService *validation.Service) *core.BulkResult {
-	
+
 	result := &core.BulkResult{
 		Domain:      domain,
 		ProcessedAt: time.Now(),
@@ -311,7 +309,7 @@ func processSingleDomain(ctx context.Context, domain string, options *core.BulkO
 			result.Score = report.Score
 			result.Grade = report.Grade
 			result.Issues = report.Issues
-			
+
 			// Check if validation passed based on minimum requirements
 			result.ValidationPassed = checkValidationPassed(report, options.MinScore, options.MinGrade)
 		}
@@ -319,7 +317,7 @@ func processSingleDomain(ctx context.Context, domain string, options *core.BulkO
 		// Discovery only
 		discoveryService := validation.NewService(config)
 		defer discoveryService.Close()
-		
+
 		discoveryResult, err := discoveryService.ValidateDomain(ctx, domain)
 		if err != nil {
 			result.Error = err.Error()
@@ -341,18 +339,18 @@ func checkValidationPassed(report *core.LintReport, minScore int, minGrade strin
 	if minScore > 0 && report.Score < minScore {
 		return false
 	}
-	
+
 	// Check minimum grade
 	if minGrade != "" {
 		gradeValues := map[string]int{
 			"A": 90, "B": 80, "C": 70, "D": 60, "F": 0,
 		}
-		
+
 		requiredScore, exists := gradeValues[strings.ToUpper(minGrade)]
 		if exists && report.Score < requiredScore {
 			return false
 		}
 	}
-	
+
 	return true
 }

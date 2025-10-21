@@ -40,8 +40,6 @@ Examples:
 	},
 }
 
-
-
 func init() {
 	cobra.OnInitialize(initConfig)
 
@@ -113,18 +111,18 @@ func initConfig() {
 
 	// Initialize global config
 	config = &core.Config{
-		Timeout:       viper.GetDuration("timeout"),
-		MaxRedirects:  viper.GetInt("max-redirects"),
-		VerifyTLS:     viper.GetBool("verify-tls"),
-		HonorRobots:   viper.GetBool("honor-robots"),
-		PublicMode:    viper.GetBool("public-mode"),
-		UserAgent:     viper.GetString("user-agent"),
-		MaxRPS:        int(viper.GetFloat64("rate-limit")),
-		Concurrency:   viper.GetInt("rate-burst"),
-		Workers:       viper.GetInt("workers"),
-		CacheEnabled:  false, // Disabled by default for CLI
-		OutputFormat:  viper.GetString("output"),
-		Verbose:       viper.GetBool("verbose"),
+		Timeout:      viper.GetDuration("timeout"),
+		MaxRedirects: viper.GetInt("max-redirects"),
+		VerifyTLS:    viper.GetBool("verify-tls"),
+		HonorRobots:  viper.GetBool("honor-robots"),
+		PublicMode:   viper.GetBool("public-mode"),
+		UserAgent:    viper.GetString("user-agent"),
+		MaxRPS:       int(viper.GetFloat64("rate-limit")),
+		Concurrency:  viper.GetInt("rate-burst"),
+		Workers:      viper.GetInt("workers"),
+		CacheEnabled: false, // Disabled by default for CLI
+		OutputFormat: viper.GetString("output"),
+		Verbose:      viper.GetBool("verbose"),
 		Output: core.OutputConfig{
 			Format:  viper.GetString("output"),
 			Verbose: viper.GetBool("verbose"),

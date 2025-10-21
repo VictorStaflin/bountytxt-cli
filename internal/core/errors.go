@@ -7,20 +7,20 @@ import (
 
 // Common error types for the application
 var (
-	ErrDomainNotFound     = errors.New("domain not found")
+	ErrDomainNotFound      = errors.New("domain not found")
 	ErrSecurityTxtNotFound = errors.New("security.txt not found")
-	ErrInvalidDomain      = errors.New("invalid domain format")
-	ErrNetworkTimeout     = errors.New("network timeout")
-	ErrTLSVerification    = errors.New("TLS verification failed")
-	ErrTooManyRedirects   = errors.New("too many redirects")
-	ErrRateLimited        = errors.New("rate limited")
-	ErrRobotsBlocked      = errors.New("blocked by robots.txt")
-	ErrInvalidFormat      = errors.New("invalid security.txt format")
-	ErrExpiredFile        = errors.New("security.txt file has expired")
-	ErrMissingContact     = errors.New("missing required Contact field")
-	ErrInvalidExpires     = errors.New("invalid Expires field")
-	ErrInvalidCanonical   = errors.New("invalid Canonical field")
-	ErrInvalidContact     = errors.New("invalid Contact field")
+	ErrInvalidDomain       = errors.New("invalid domain format")
+	ErrNetworkTimeout      = errors.New("network timeout")
+	ErrTLSVerification     = errors.New("TLS verification failed")
+	ErrTooManyRedirects    = errors.New("too many redirects")
+	ErrRateLimited         = errors.New("rate limited")
+	ErrRobotsBlocked       = errors.New("blocked by robots.txt")
+	ErrInvalidFormat       = errors.New("invalid security.txt format")
+	ErrExpiredFile         = errors.New("security.txt file has expired")
+	ErrMissingContact      = errors.New("missing required Contact field")
+	ErrInvalidExpires      = errors.New("invalid Expires field")
+	ErrInvalidCanonical    = errors.New("invalid Canonical field")
+	ErrInvalidContact      = errors.New("invalid Contact field")
 )
 
 // SecurityTxtError represents a structured error with context
@@ -74,17 +74,17 @@ func (e *SecurityTxtError) WithCode(code int) *SecurityTxtError {
 
 // Error type constants
 const (
-	ErrorTypeNetwork     = "network"
-	ErrorTypeValidation  = "validation"
-	ErrorTypeParsing     = "parsing"
-	ErrorTypeCompliance  = "compliance"
-	ErrorTypeRateLimit   = "rate_limit"
-	ErrorTypePermission  = "permission"
-	ErrorTypeNotFound    = "not_found"
-	ErrorTypeTimeout     = "timeout"
-	ErrorTypeTLS         = "tls"
-	ErrorTypeRedirect    = "redirect"
-	ErrorTypeFormat      = "format"
+	ErrorTypeNetwork    = "network"
+	ErrorTypeValidation = "validation"
+	ErrorTypeParsing    = "parsing"
+	ErrorTypeCompliance = "compliance"
+	ErrorTypeRateLimit  = "rate_limit"
+	ErrorTypePermission = "permission"
+	ErrorTypeNotFound   = "not_found"
+	ErrorTypeTimeout    = "timeout"
+	ErrorTypeTLS        = "tls"
+	ErrorTypeRedirect   = "redirect"
+	ErrorTypeFormat     = "format"
 )
 
 // IsRetryableError determines if an error should trigger a retry
