@@ -1,6 +1,6 @@
 # BountyTxt
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/VictorStaflin/bountytxt-cli)](https://goreportcard.com/report/github.com/VictorStaflin/bountytxt-cli)
+[![Go Report Card](https://goreportcard.com/badge/github.com/victorstaflin/bountytxt-cli)](https://goreportcard.com/report/github.com/victorstaflin/bountytxt-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 BountyTxt CLI is a comprehensive tool for discovering, validating, and analyzing RFC 9116 security.txt files to find vulnerability disclosure contacts for domains.
